@@ -27,4 +27,4 @@ Automated script to install Zabbix Server with PostgreSQL 16 on **AlmaLinux 9** 
 ## 🚀 How to Use
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/0LB-i/unifi-server-script/main/install-unifi-server.sh)
+bash <(curl -s https://raw.githubusercontent.com/0LB-i/zabbix-server/blob/main/zabbix-server.sh)
