@@ -96,4 +96,13 @@ dnf install -y \
 echo "➤ Habilitando e iniciando serviços..."
 systemctl enable --now zabbix-server zabbix-agent2 httpd php-fpm
 
+# ▶ Backup automático do banco de dados
+read -p "Deseja configurar o backup automático do banco de dados do Zabbix? [s/N]: " CONFIG_DUMP
+if [[ "$CONFIG_DUMP" =~ ^[sS]$ ]]; then
+    echo "➤ Executando script de configuração de backup..."
+    bash <(curl -s https://raw.githubusercontent.com/0LB-i/zabbix-server/main/dump-zabbix.sh)
+else
+    echo "ℹ️ Configuração de backup ignorada."
+fi
+
 echo "✅ Instalação concluída com sucesso para o Zabbix $ZBX_VERSION com PostgreSQL 16!"
