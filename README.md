@@ -27,8 +27,8 @@ Automated script to install Zabbix Server with PostgreSQL 16 on **AlmaLinux 9** 
 ## 🚀 How to Use
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/0LB-i/zabbix-server/blob/main/zabbix-server.sh)
+bash <(curl -s https://raw.githubusercontent.com/0LB-i/zabbix-server/main/zabbix-server.sh)
 ```
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/0LB-i/zabbix-server/blob/main/dump-zabbix.sh)
+bash <(curl -s https://raw.githubusercontent.com/0LB-i/zabbix-server/main/dump-zabbix.sh)
 ```
