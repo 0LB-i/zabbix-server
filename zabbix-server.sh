@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # ─────────────────────────────────────────────────────────────
-# Script para instalar o Zabbix Server com PostgreSQL 16 no AlmaLinux 9
+# Script para instalar o Zabbix Server com PostgreSQL 16
+# Compatível com AlmaLinux 9 e Rocky Linux 9
 # Autor: Gabriel B. Machado
 # ─────────────────────────────────────────────────────────────
 
@@ -23,6 +24,13 @@ systemctl status firewalld
 echo "➤ Atualizando sistema..."
 dnf update -y
 
+# ▶ Detecta distribuição (AlmaLinux ou Rocky)
+OS_ID=$(awk -F= '/^ID=/{gsub(/"/, "", $2); print $2}' /etc/os-release)
+if [[ "$OS_ID" != "almalinux" && "$OS_ID" != "rocky" ]]; then
+  echo "❌ Distribuição não suportada: $OS_ID"
+  exit 1
+fi
+
 # ▶ Solicita versão do Zabbix
 read -p "Digite a versão do Zabbix que deseja instalar [padrão: 7.0]: " ZBX_VERSION
 ZBX_VERSION=${ZBX_VERSION:-7.0}
@@ -31,9 +39,9 @@ ZBX_VERSION=${ZBX_VERSION:-7.0}
 read -s -p "Digite a senha para o usuário 'zabbix' no PostgreSQL: " ZBX_DB_PASS
 echo
 
-# ▶ Adiciona repositório Zabbix
-REPO_URL="https://repo.zabbix.com/zabbix/$ZBX_VERSION/release/alma/9/noarch/zabbix-release-latest-$ZBX_VERSION.el9.noarch.rpm"
-echo "➤ Adicionando repositório Zabbix versão $ZBX_VERSION..."
+# ▶ Adiciona repositório Zabbix de acordo com a distro detectada
+REPO_URL="https://repo.zabbix.com/zabbix/$ZBX_VERSION/release/$OS_ID/9/noarch/zabbix-release-latest-$ZBX_VERSION.el9.noarch.rpm"
+echo "➤ Adicionando repositório Zabbix versão $ZBX_VERSION para $OS_ID..."
 rpm -Uvh "$REPO_URL" || {
     echo "❌ Erro ao adicionar o repositório. Verifique se a versão está correta."
     exit 1
@@ -96,7 +104,8 @@ dnf install -y \
 echo "➤ Habilitando e iniciando serviços..."
 systemctl enable --now zabbix-server zabbix-agent2 httpd php-fpm
 
-sed "s/h:i A/H:i/g" -i /usr/share/zabbix/include/translateDefines.inc.php
+# Corrige formato de horário na interface (opcional)
+sed -i 's/h:i A/H:i/g' /usr/share/zabbix/include/translateDefines.inc.php
 
 # ▶ Backup automático do banco de dados
 read -p "Deseja configurar o backup automático do banco de dados do Zabbix? [s/N]: " CONFIG_DUMP
@@ -107,4 +116,4 @@ else
     echo "ℹ️ Configuração de backup ignorada."
 fi
 
-echo "✅ Instalação concluída com sucesso para o Zabbix $ZBX_VERSION com PostgreSQL 16!"
+echo "✅ Instalação concluída com sucesso para o Zabbix $ZBX_VERSION com PostgreSQL 16 em $OS_ID!"
