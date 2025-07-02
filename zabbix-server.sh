@@ -96,6 +96,8 @@ dnf install -y \
 echo "➤ Habilitando e iniciando serviços..."
 systemctl enable --now zabbix-server zabbix-agent2 httpd php-fpm
 
+sed "s/h:i A/H:i/g" -i /usr/share/zabbix/include/translateDefines.inc.php
+
 # ▶ Backup automático do banco de dados
 read -p "Deseja configurar o backup automático do banco de dados do Zabbix? [s/N]: " CONFIG_DUMP
 if [[ "$CONFIG_DUMP" =~ ^[sS]$ ]]; then
