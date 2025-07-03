@@ -11,7 +11,7 @@ read -p "Digite o hostname para este servidor: " HOSTNAME
 hostnamectl set-hostname "$HOSTNAME"
 
 echo "➤ Instalando utilitários básicos..."
-dnf install -y net-snmp net-snmp-utils vim wget ntsysv open-vm-tools net-tools
+dnf install -y net-snmp net-snmp-utils vim wget ntsysv open-vm-tools net-tools glibc-langpack-pt
 
 echo "➤ Desativando SELinux..."
 sed -i 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
@@ -103,9 +103,6 @@ dnf install -y \
 # ▶ Ativação de serviços
 echo "➤ Habilitando e iniciando serviços..."
 systemctl enable --now zabbix-server zabbix-agent2 httpd php-fpm
-
-# Corrige formato de horário na interface (opcional)
-sed -i 's/h:i A/H:i/g' /usr/share/zabbix/include/translateDefines.inc.php
 
 # ▶ Backup automático do banco de dados
 read -p "Deseja configurar o backup automático do banco de dados do Zabbix? [s/N]: " CONFIG_DUMP
