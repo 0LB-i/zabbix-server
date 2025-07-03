@@ -86,7 +86,7 @@ zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz | sudo -u zabbix /us
 ZBX_CONF="/etc/zabbix/zabbix_server.conf"
 echo "➤ Atualizando configurações no zabbix_server.conf..."
 
-sed -i "s/^# DBPassword=.*/DBPassword=\"${ZBX_DB_PASS}\"/" "$ZBX_CONF"
+sed -i "s/^# DBPassword=.*/DBPassword=$ZBX_DB_PASS/" "$ZBX_CONF"
 sed -i "/^#\?CacheSize=/c\CacheSize=512M" "$ZBX_CONF"
 sed -i "/^#\?StartPingers=/c\StartPingers=10" "$ZBX_CONF"
 sed -i "/^#\?StartPollers=/c\StartPollers=10" "$ZBX_CONF"
